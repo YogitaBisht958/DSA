@@ -1,0 +1,61 @@
+class FreqStack {
+    HashMap<Integer, Integer> fmap;
+    HashMap<Integer, Stack<Integer>> map;
+    int maxFreq = 0;
+    
+    public FreqStack() {
+        fmap = new HashMap<>();
+        map = new HashMap<>();
+    }
+    
+    public void push(int val) {
+        if(fmap.containsKey(val)){
+            int newFreq = fmap.get(val) + 1;
+            fmap.put(val, newFreq);
+            maxFreq = Math.max(maxFreq, newFreq);
+            
+            if(map.containsKey(newFreq)){
+                Stack<Integer> st = map.get(newFreq);
+                st.push(val);
+            }else{
+                Stack<Integer> st = new Stack<>();
+                st.push(val);
+                map.put(newFreq, st);
+            }
+        }else{
+            fmap.put(val, 1);
+            maxFreq = Math.max(maxFreq, 1);
+            if(map.containsKey(1)){
+                Stack<Integer> st = map.get(1);
+                st.push(val);
+            }else{
+                Stack<Integer> st = new Stack<>();
+                st.push(val);
+                map.put(1, st);
+            }
+        }
+    }
+    
+    public int pop() {
+        if(maxFreq == 0) return -1;
+        Stack<Integer> st = map.get(maxFreq);
+        int peek = st.pop();
+        
+        if(st.size() == 0){
+            map.remove(maxFreq);
+            maxFreq--;
+        }
+        
+        if(fmap.get(peek) == 1) fmap.remove(peek);
+        else fmap.put(peek, fmap.get(peek) - 1);
+        
+        return peek;
+    }
+}
+
+/**
+ * Your FreqStack object will be instantiated and called as such:
+ * FreqStack obj = new FreqStack();
+ * obj.push(val);
+ * int param_2 = obj.pop();
+ */
