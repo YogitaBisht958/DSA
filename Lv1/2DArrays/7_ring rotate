@@ -1,0 +1,119 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        Scanner scn = new Scanner(System.in);
+        int n = scn.nextInt();
+        int m = scn.nextInt();
+        int[][] twodarray = new int[n][m];
+
+        for(int i=0; i<n; i++){
+            for(int j=0; j<m; j++){
+                twodarray[i][j] = scn.nextInt();
+            }
+        }
+
+        int s = scn.nextInt();
+        int r = scn.nextInt();
+
+        //Step 1: make a 1d array and fill it with the ring to be rotated
+        //step 2: rotate the 1d array
+        //step 3: fill 2d array back with 1d array
+        int[] onedarray = fillOneDarray(twodarray, s);
+        rotate(onedarray, r);
+        fillTwoDarray(twodarray, onedarray, s);
+        display(twodarray);
+    }
+
+    private static int[] fillOneDarray(int[][] twodarray, int s){
+        int rows = twodarray.length, cols = twodarray[0].length;
+        int rmin = s - 1, cmin = s - 1;
+        int rmax = rows - s, cmax = cols - s;
+        int sz = 2 * rmax + 2 * cmax - 2*rmin - 2*cmin;
+        int[] onedarray = new int[sz];
+
+        int idx = 0;
+
+        for(int i = rmin; i <= rmax; i++){ //left wall
+            onedarray[idx++] = twodarray[i][cmin];
+        }
+        cmin++;
+
+        for(int i = cmin; i <= cmax; i++){
+            onedarray[idx++] = twodarray[rmax][i];
+        }
+        rmax--;
+
+        for(int i = rmax; i >= rmin; i--){
+            onedarray[idx++] = twodarray[i][cmax];
+        }
+        cmax--;
+ 
+        for(int i = cmax; i >= cmin; i--){
+            onedarray[idx++] = twodarray[rmin][i];
+        }
+        cmax--;
+
+        return onedarray;
+    }
+
+    private static void rotate(int[] onedarray, int r){
+        r = r % onedarray.length;
+
+        if(r < 0) r += onedarray.length;
+
+        reverse(onedarray, 0, onedarray.length - r - 1);
+        reverse(onedarray, onedarray.length - r, onedarray.length - 1);
+        reverse(onedarray, 0, onedarray.length - 1);
+    }
+
+    private static void reverse(int[] onedarray, int left, int right){
+        while(left < right){
+            int temp = onedarray[left];
+            onedarray[left] = onedarray[right];
+            onedarray[right] = temp;
+            left++;
+            right--;
+        }
+    }
+
+    private static void fillTwoDarray(int[][] twodarray, int[] onedarray, int s){
+        int rows = twodarray.length, cols = twodarray[0].length;
+        int rmin = s - 1, cmin = s-1;
+        int rmax = rows - s, cmax = cols - s;
+        int idx = 0;
+
+        for(int i = rmin; i <= rmax; i++){ //left wall
+            twodarray[i][cmin] = onedarray[idx++];
+        }
+        cmin++;
+
+        for(int i = cmin; i <= cmax; i++){ //bottom wall
+            twodarray[rmax][i] = onedarray[idx++];
+        }
+        rmax--;
+        
+        for(int i = rmax; i >= rmin; i--){ //right wall
+            twodarray[i][cmax] = onedarray[idx++];
+        }
+        cmax--;
+        
+        for(int i = cmax; i >= cmin; i--){ //top wall
+            twodarray[rmin][i] = onedarray[idx++];
+        }
+        rmin--;
+        
+    }
+
+    public static void display(int[][] arr){
+        for(int i = 0; i < arr.length; i++){
+            for(int j = 0; j < arr[0].length; j++){
+                System.out.print(arr[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
+}
