@@ -1,0 +1,46 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        // write your code here
+        Scanner scn = new Scanner(System.in);
+        int n = scn.nextInt();
+        int[][] mat = new int[n][n];
+
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                mat[i][j] = scn.nextInt();
+            }
+        }
+
+        for(int i = 0; i < mat.length; i++){
+            int min = mat[i][0];
+            int colno = 0;
+
+            for(int j = 0; j < mat[0].length; j++){
+                if(mat[i][j] < min){
+                    min = mat[i][j];
+                    colno = j;
+                } 
+            }
+
+            boolean isSaddle = true;
+            //check if its max in its column
+            for(int k = 0; k < mat.length; k++) {
+                if(mat[k][colno] > min) {
+                    isSaddle = false;
+                    break;
+                }
+            }
+
+            if(isSaddle){
+                System.out.println(min);
+                return;
+            }
+        }
+
+        System.out.println("Invalid input");
+    }
+}
