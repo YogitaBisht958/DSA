@@ -1,0 +1,41 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        Scanner scn = new Scanner(System.in);
+        String str = scn.nextLine();
+        ArrayList<String> ans = gss(str);
+        System.out.println(ans);
+    }
+
+    // Expectation , gss(abc) = [..., ..c, .b., .bc] + [a.., a.c, ab., abc]
+    // Faith, gss(bc) = [.., .c, b., bc]
+    // Expectation with faith , gss(abc) = .gss(bc) + a(gss(bc))
+
+    public static ArrayList<String> gss(String str) {
+        if(str.length() == 0){
+            String thess = "";
+            ArrayList<String> bres = new ArrayList<>(); // base result
+            bres.add(thess);
+            return bres; // [""] with size 1, thess.length() => 0
+        }   
+
+        char ch = str.charAt(0); // a
+        String ros = str.substring(1); // bc
+
+        ArrayList<String> rres = gss(ros); // recursion result
+        ArrayList<String> mres = new ArrayList<String>(); // my result
+
+        for(String rstr : rres){
+            mres.add(rstr);     // .gss(bc)
+        }
+
+        for(String rstr: rres){
+            mres.add(ch + rstr); // a(gss(bc))
+        }
+
+        return mres;
+   }
+}
