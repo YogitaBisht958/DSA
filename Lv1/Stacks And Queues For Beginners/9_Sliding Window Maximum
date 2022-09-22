@@ -1,0 +1,60 @@
+import java.io.*;
+import java.util.*;
+
+public class Main{
+   private static int[] nextGreater(int[] arr){
+      Stack<Integer> st = new Stack<>();
+      int[] ans = new int[arr.length];
+
+      for(int i = arr.length - 1; i >= 0; i--){
+         int val = arr[i];
+
+         while(st.size() > 0 && arr[st.peek()] <= val){
+            st.pop();
+         }
+
+         if(st.size() > 0){
+            ans[i] = st.peek();
+         }else{
+            ans[i] = arr.length;
+         }
+
+         st.push(i);
+      }
+
+      return ans;
+   }
+
+   public static void main(String[] args) throws Exception {
+      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+      int n = Integer.parseInt(br.readLine());
+      int[] arr = new int[n];
+      for(int i = 0; i < n; i++){
+         arr[i] = Integer.parseInt(br.readLine());
+      }
+      int k = Integer.parseInt(br.readLine());
+
+      // code
+      int[] nge = nextGreater(arr);
+      int[] ans = new int[arr.length - k + 1];
+
+      int j = 0;
+      for(int i = 0; i <= arr.length - k; i++){
+         // enter the loop to find maximum of window starting at i
+         if(j < i)   
+            j = i;
+         
+         while(nge[j] < i + k){
+            j = nge[j];
+         }
+
+         ans[i] = arr[j];
+      }
+
+      for(int val : ans){
+         System.out.println(val);
+      }
+      
+   }
+}
