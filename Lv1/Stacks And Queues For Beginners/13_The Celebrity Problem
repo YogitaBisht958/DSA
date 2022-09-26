@@ -1,0 +1,40 @@
+class Solution{ 
+    //Function to find if there is a celebrity in the party or not.
+    int celebrity(int arr[][], int n){
+    	// code here 
+    	Stack<Integer> st = new Stack<>();
+    	
+    	for(int i = 0; i < n; i++){
+    	    st.push(i);
+    	}
+    	
+    	while(st.size() > 1){
+    	    int i = st.pop();
+    	    int j = st.pop();
+    	    
+    	    if(arr[i][j] == 1){ // means i knows about j so , i can't be a celebrity
+    	        st.push(j);
+    	    }else{ // j knows about i means j can't be a celebrity
+    	        st.push(i);
+    	    }
+    	}
+    	
+    	int pot = st.pop(); // potential celebrity
+    	boolean flag = true;
+    	
+    	for(int i = 0; i < arr.length; i++){
+    	    if(i != pot){
+    	        if(arr[i][pot] == 0 || arr[pot][i] == 1){ // either i don't know pot or pot knows i....in both case pot can't be a celebrity
+    	            flag = false;
+    	            break;
+    	        }
+    	    }
+    	}
+    	
+    	if(flag == true){
+    	    return pot;
+    	}else{
+    	    return -1;
+    	}
+    }
+}
